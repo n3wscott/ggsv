@@ -28,5 +28,8 @@ func main() {
 	}
 
 	next, err := repo.Next(ref)
+	if err != nil {
+		panic(err)
+	}
 	fmt.Printf("v%s", next)
 }

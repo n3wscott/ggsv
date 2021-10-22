@@ -7,7 +7,9 @@ package git
 
 import (
 	"fmt"
+	"os"
 	"path/filepath"
+	"regexp"
 	"strings"
 
 	"github.com/blang/semver/v4"
@@ -70,13 +72,14 @@ func (r *Repo) Next(ref string) (*semver.Version, error) {
 	v.Build = nil
 
 	fam := semver.Versions{}
+	aVersion, _ := regexp.Compile("^v\\d+.\\d+.\\d+$")
 	for _, tag := range r.Tags {
-		if !strings.HasPrefix(tag, "v") {
+		if aVersion.MatchString(tag) {
 			continue
 		}
 		tv, err := semver.ParseTolerant(tag[1:])
 		if err != nil {
-			return nil, fmt.Errorf("failed to parse verison in branch: %s, %v", tag, err)
+			fmt.Fprintf(os.Stderr,"failed to parse verison in branch: %s, %v", tag, err)
 		}
 		if tv.Major == v.Major && tv.Minor == v.Minor {
 			fam = append(fam, tv)

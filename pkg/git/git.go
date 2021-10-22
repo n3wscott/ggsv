@@ -74,7 +74,7 @@ func (r *Repo) Next(ref string) (*semver.Version, error) {
 	fam := semver.Versions{}
 	aVersion, _ := regexp.Compile("^v\\d+.\\d+.\\d+$")
 	for _, tag := range r.Tags {
-		if aVersion.MatchString(tag) {
+		if !aVersion.MatchString(tag) {
 			continue
 		}
 		tv, err := semver.ParseTolerant(tag[1:])
